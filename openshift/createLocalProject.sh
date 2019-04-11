@@ -51,6 +51,16 @@ isLocalCluster (){
   fi
 }
 
+isMinishiftRun (){
+	if minishift status | grep -q 'Running'; then
+		# Minishift instance is running ...
+	return 0
+	else
+		# No Minishift instance is running ...
+	return 1
+	fi
+}
+
 projectExists (){
   project=$1
   rtnVal=$(oc projects | grep ${project})
@@ -82,8 +92,12 @@ else
 fi
 # ===================================================================================================
 
-if ! isLocalCluster; then
-  echo "This script can only be run on a local cluster!"
+if isMinishiftRun; then
+   echo "Run script on minishift..."
+elif isLocalCluster; then
+  echo "Run script in local cluster..."
+else
+	echo "No minishift or local cluster found!"
   exit 1
 fi
 

@@ -12,6 +12,9 @@ usage (){
   echo "Usage:"
   echo
   echo "${0} <project_name> <git_ref> <git_uri>"
+	echo
+	echo "Optional"
+	echo "-c : create a sample project"
   echo
   echo "Where:"
   echo " - <project_name> is the name of the openshift project."
@@ -42,33 +45,79 @@ isLocalCluster (){
 	return 0
   fi
 }
+
+isMinishiftRun (){
+	if minishift status | grep -q "Running"; then
+		# Minishift instance is running ...
+	return 0
+	else
+		# No Minishift instance is running ...
+	return 1
+	fi
+}
 # ===================================================================================================
 
 # ===================================================================================================
 # Setup
 # ---------------------------------------------------------------------------------------------------
-if [ -z "${1}" ]; then
-  usage
-elif [ -z "${2}" ]; then
-  usage  
-elif [ -z "${3}" ]; then
-  usage
-elif [ ! -z "${4}" ]; then
-  usage
-else
+while getopts ":c" opt; do
+  case $opt in
+    c)
+      CREATE=0
+      ;;
+    \?)
+      usage
+      ;;
+  esac
+done
+shift $(($OPTIND - 1))
+
+if [ ! -z "${1}" ]; then
   PROJECT_NAMESPACE=$1
+fi
+
+if [ ! -z "${2}" ]; then
   GIT_REF=$2
+fi
+
+if [ ! -z "${3}" ]; then
   GIT_URI=$3
 fi
-# ===================================================================================================
 
-if ! isLocalCluster; then
-  echo "This script can only be run on a local cluster!"
+if [ -z "$PROJECT_NAMESPACE" ]; then
+	echo "Enter PROJECT NAMESPACE."
+	echo -n "Please enter the name of the tools project; for example 'project-tools': "
+	read PROJECT_NAMESPACE
+	PROJECT_NAMESPACE="$(echo "${PROJECT_NAMESPACE}" | tr '[:upper:]' '[:lower:]')"
+	echo
+fi
+
+if [ -z "$GIT_REF" ]; then
+	echo "Enter GIT REF"
+	echo -n "Please enter the name of the github reference; for example 'master': "
+	read GIT_REF
+	echo
+fi
+
+if [ -z "$GIT_URI" ]; then
+	echo "Enter GIT URI"
+	echo -n "Please enter the name of the github reference; for example 'https://github.com/bcgov/TheOrgBook.git': "
+	read GIT_URI
+	echo
+fi
+# ===================================================================================================
+if isMinishiftRun; then
+   echo "Run script on minishift..."
+elif isLocalCluster; then
+  echo "Run script in local cluster..."
+else
+	echo "No minishift or local cluster found!"
   exit 1
 fi
 
-./createLocalProject.sh ${PROJECT_NAMESPACE} "Solr" "Solr Test Project"
-exitOnError
+if [ $CREATE ]; then
+	./createLocalProject.sh ${PROJECT_NAMESPACE} "Solr" "Solr Test Project"
+fi
 
 ./generateBuilds.sh ${PROJECT_NAMESPACE} ${GIT_REF} ${GIT_URI}
 exitOnError

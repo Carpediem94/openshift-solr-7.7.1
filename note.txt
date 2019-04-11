@@ -1,0 +1,11 @@
+S2I
+
+- Per prima cosa generare il BuildConfig riferito all'immagine pulita (Strategy=Docker) semplicemente avviando il Dockerfile e copiandoci all'interno gli script s2i e rendendoli eseguibili
+
+- Quindi generare il BuildConfig riferito all'immagine customizzata (Strtegy=Source) che andrà ad eseguire l'assemble all'interno del container
+
+- Quindi eseguire il build dell'immagine all'interno del progetto tramite "oc create -f *_BuildConfig.json"
+
+- Generare il file di configurazione per il deployment che andrà ad aggiungere la configurazione per il volume interno
+
+

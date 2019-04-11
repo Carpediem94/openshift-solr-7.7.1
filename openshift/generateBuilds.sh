@@ -27,22 +27,24 @@ GIT_REF="${2}"
 GIT_URI="${3}"
 # -----------------------------------------------------------------------------------
 if [ -z "$PROJECT_NAME" ]; then
-	echo "You must supply PROJECT_NAME."
-	echo -n "Please enter the name of the tools project; for example 'devex-von-tools': "
+	echo "Enter PROJECT_NAME."
+	echo -n "Please enter the name of the tools project; for example 'project-tools': "
 	read PROJECT_NAME
 	PROJECT_NAME="$(echo "${PROJECT_NAME}" | tr '[:upper:]' '[:lower:]')"
 	echo
 fi
 
 if [ -z "$GIT_REF" ]; then
-	GIT_REF="master"
-	echo "Defaulting 'GIT_REF' to ${GIT_REF} ..."
+	echo "Enter GIT_REF"
+	echo -n "Please enter the name of the github reference; for example 'master': "
+	read GIT_REF
 	echo
 fi
 
 if [ -z "$GIT_URI" ]; then
-	GIT_URI="https://github.com/bcgov/TheOrgBook.git"
-	echo "Defaulting 'GIT_URI' to ${GIT_URI} ..."
+	echo "Enter GIT_URI"
+	echo -n "Please enter the name of the github reference; for example 'https://github.com/bcgov/TheOrgBook.git': "
+	read GIT_URI
 	echo
 fi
 
