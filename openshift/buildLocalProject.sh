@@ -119,7 +119,7 @@ else
   exit 1
 fi
 
-if [ $CREATE ]; then
+if $CREATE; then
 	./createLocalProject.sh ${PROJECT_NAMESPACE} "Solr" "Solr Test Project"
 fi
 
