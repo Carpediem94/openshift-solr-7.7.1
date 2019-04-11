@@ -15,6 +15,7 @@ usage (){
 	echo
 	echo "Optional"
 	echo "-c : create a sample project"
+	echo "-h : usage"
   echo
   echo "Where:"
   echo " - <project_name> is the name of the openshift project."
@@ -22,7 +23,7 @@ usage (){
   echo " - <git_uri> is the GitHub repo to use."
   echo
   echo "Examples:"
-  echo "${0} solr master https://github.com/bcgov/openshift-solr.git"
+  echo "${0} solr master https://github.com/Carpediem94/openshift-solr-7.7.1.git"
   echo "========================================================================================"
   exit 1
 }
@@ -60,10 +61,13 @@ isMinishiftRun (){
 # ===================================================================================================
 # Setup
 # ---------------------------------------------------------------------------------------------------
-while getopts ":c" opt; do
+while getopts ":c:h" opt; do
   case $opt in
     c)
       CREATE=0
+      ;;
+		h)
+      usage
       ;;
     \?)
       usage
