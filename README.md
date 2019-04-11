@@ -17,9 +17,12 @@ Sounds cool right?  It is.  And here's how you can use it.
 ### Quick Start
 * Bring up a local OpenShift cluster.
   * There are some [Chocolatey Scripts](https://github.com/WadeBarnes/dev-tools/tree/master/chocolatey) that make it very easy to do this on Windows.
-* Run the `buildLocalProject.sh` script in the `openshift` directory.
+Or
+* Bring up a local Minishift instance.
+* Run the `buildLocalProject.sh -c` script in the `openshift` directory.
 
 This will create a **Solr** project and generate all of the build and deployment configurations needed for a working Solr instance complete with a core configured from source.
+Withot option -c, you can generete all of the build and deployment configurations for an existing project.
 
 ### If you just want to try running SOLR in OpenShift...
 
