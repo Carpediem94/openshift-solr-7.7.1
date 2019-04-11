@@ -7,7 +7,7 @@
 # Override this env variable to change the name of your core.
 
 if [ -z "${CORE_NAME}" ]; then
-  CORE_NAME=films
+  CORE_NAME=autocore
 fi
 
 if [ -z "${SOLR_CONF_DIR}" ]; then
