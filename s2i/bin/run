@@ -43,7 +43,8 @@ do
 		echo "Configuration: ${CONF_DIR}"
 		echo "====================================================================="
 		
-		solr-precreate ${CORE_NAME} ${CONF_DIR}
+		# solr-precreate ${CORE_NAME} ${CONF_DIR}
+		precreate-core ${CORE_NAME} ${CONF_DIR}
 		echo "Core ${CORE_NAME} created"
 		echo "====================================================================="
 	else
