@@ -4,37 +4,36 @@
 # For more information see the documentation:
 # https://docs.openshift.org/latest/creating_images/s2i.html#creating-images-s2i
 
-# Override this env variable to change the name of your core.
-# if [ -z "${SOLR_CONF_DIR}" ]; then
-  # SOLR_CONF_DIR="${SOLR_HOME:-/opt/solr/server/solr}/configsets"
-SOLR_CONF_DIR="${SOLR_HOME:-/opt/solr/server/solr}/myconfigsets"
-# fi
+if [ -z "${SOLR_CONF_DIR}" ]; then
+	SOLR_CONF_DIR="${SOLR_HOME:-/opt/solr/server/solr}/myconfigsets"
+fi
 
 for dir in ${SOLR_CONF_DIR}/*/
 do
   dir=${dir%*/}
 	echo "Loading core ${dir##*/} ...";
 
-	if [ -z "${CORE_NAME}" ]; then
-		CORE_NAME=${dir##*/}
-	fi
+	# if [ -z "${CORE_NAME}" ]; then
+	CORE_NAME=${dir##*/}
+	# fi
 
-	if [ -z "${CONF_DIR}" ]; then
-		CONF_DIR="${SOLR_CONF_DIR}/${CORE_NAME}"
-	fi
+	# if [ -z "${CONF_DIR}" ]; then
+	CONF_DIR="${SOLR_CONF_DIR}/${CORE_NAME}"
+	# fi
 
-	if [ -z "${SOLR_HOME}" ]; then
-		CORES_DIR="/opt/solr/server/solr/mycores"
-	else
-		CORES_DIR="${SOLR_HOME}"
-	fi
+	# if [ -z "${SOLR_HOME}" ]; then
+	CORES_DIR="/opt/solr/server/solr/mycores"
+	# else
+	#	CORES_DIR="${SOLR_HOME}"
+	# fi
 
 	CORE_DIR="${CORES_DIR}/${CORE_NAME}"
+	echo
 
 	# Use scripts from the official docker-solr image
 	# https://github.com/docker-solr/docker-solr/tree/master/scripts
 	# echo "Working from; $(pwd)"
-	echo
+	echo ${CORE_DIR}
 
 	if [[ ! -d ${CORE_DIR} ]]; then
 		echo "====================================================================="
@@ -57,9 +56,8 @@ do
 		echo "====================================================================="
 		
 		cp -r "${CONF_DIR}/" "${CORES_DIR}"
+		exec solr -f
 		echo "Core ${CORE_NAME} updated"
 		echo "====================================================================="
 	fi
 done
-
-exec solr -f
