@@ -10,10 +10,10 @@
 SOLR_CONF_DIR="${SOLR_HOME:-/opt/solr/server/solr}/myconfigsets"
 # fi
 
-for dir in ${SOLR_CONF_DIR}/*/ # list directories in the form "/tmp/dirname/"
+for dir in ${SOLR_CONF_DIR}/*/
 do
-  dir=${dir%*/} # remove the trailing "/"
-	echo "Loading core ${dir##*/} ..."; # print everything after the final "/"
+  dir=${dir%*/}
+	echo "Loading core ${dir##*/} ...";
 
 	if [ -z "${CORE_NAME}" ]; then
 		CORE_NAME=${dir##*/}
@@ -42,16 +42,11 @@ do
 		echo "---------------------------------------------------------------------"
 		echo "Core Name: ${CORE_NAME}" 
 		echo "Configuration: ${CONF_DIR}"
-		echo
-		echo "By default cores are created in either the SOLR_HOME directory"
-		echo "or the /opt/solr/server/solr/mycores directory."
-		echo
-		echo "If the SOLR_HOME env variable is defined the core will be created"
-		echo "in that directory.  Otherwise the core will be created in"
-		echo "/opt/solr/server/solr/mycores"
 		echo "====================================================================="
 		
 		solr-precreate ${CORE_NAME} ${CONF_DIR}
+		echo "Core ${CORE_NAME} created"
+		echo "====================================================================="
 	else
 		echo "====================================================================="
 		echo "Updating SOLR Configuration Files:"
@@ -59,16 +54,12 @@ do
 		echo "Core Name: ${CORE_NAME}" 
 		echo "Configuration Source: ${CONF_DIR}"
 		echo "Configuration Destination: ${CORES_DIR}"
-		echo
-		echo "By default cores are created in either the SOLR_HOME directory"
-		echo "or the /opt/solr/server/solr/mycores directory."
-		echo
-		echo "If the SOLR_HOME env variable is defined the core will be created"
-		echo "in that directory.  Otherwise the core will be created in"
-		echo "/opt/solr/server/solr/mycores"
 		echo "====================================================================="
 		
 		cp -r "${CONF_DIR}/" "${CORES_DIR}"
-		exec solr -f
+		echo "Core ${CORE_NAME} updated"
+		echo "====================================================================="
 	fi
 done
+
+exec solr -f
