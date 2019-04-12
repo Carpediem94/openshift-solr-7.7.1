@@ -11,11 +11,12 @@ usage (){
   echo "----------------------------------------------------------------------------------------"
   echo "Usage:"
   echo
-  echo "${0} <project_name> <git_ref> <git_uri>"
+  echo "${0} -c <project_name> <git_ref> <git_uri>"
+	echo "emit -c to use an existing project"
 	echo
-	echo "Optional"
-	echo "-c : create a sample project"
-	echo "-h : usage"
+	echo "Optional:"
+	echo " - c : create new project"
+	echo " - h : usage"
   echo
   echo "Where:"
   echo " - <project_name> is the name of the openshift project."
@@ -23,7 +24,7 @@ usage (){
   echo " - <git_uri> is the GitHub repo to use."
   echo
   echo "Examples:"
-  echo "${0} solr master https://github.com/Carpediem94/openshift-solr-7.7.1.git"
+  echo "${0} -c solr master https://github.com/Carpediem94/openshift-solr-7.7.1.git"
   echo "========================================================================================"
   exit 1
 }
@@ -48,14 +49,28 @@ isLocalCluster (){
 }
 
 isMinishiftRun (){
-	if minishift status | grep -q "Running"; then
+	rtnVal=$(minishift status | grep -q "Running")
+	if [ -z "$rtnVal" ]; then
+		# No Minishift instance is running ...		
+	return 1
+	else
 		# Minishift instance is running ...
 	return 0
-	else
-		# No Minishift instance is running ...
-	return 1
 	fi
 }
+
+projectNotExists (){
+  project=$1
+  rtnVal=$(oc projects | grep ${project})
+  if [ -z "$rtnVal" ]; then
+    # Project does not exist ..."
+	return 0
+  else
+    # Project exists ..."
+	return 1
+  fi
+}
+
 # ===================================================================================================
 
 # ===================================================================================================
@@ -65,6 +80,7 @@ while getopts ":c:h" opt; do
   case $opt in
     c)
       CREATE=0
+			shift $(($OPTIND - 1))
       ;;
 		h)
       usage
@@ -74,7 +90,6 @@ while getopts ":c:h" opt; do
       ;;
   esac
 done
-shift $(($OPTIND - 1))
 
 if [ ! -z "${1}" ]; then
   PROJECT_NAMESPACE=$1
@@ -89,7 +104,7 @@ if [ ! -z "${3}" ]; then
 fi
 
 if [ -z "$PROJECT_NAMESPACE" ]; then
-	echo "Enter PROJECT NAMESPACE."
+	echo "Enter PROJECT NAME"
 	echo -n "Please enter the name of the tools project; for example 'project-tools': "
 	read PROJECT_NAMESPACE
 	PROJECT_NAMESPACE="$(echo "${PROJECT_NAMESPACE}" | tr '[:upper:]' '[:lower:]')"

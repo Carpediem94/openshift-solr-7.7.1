@@ -8,57 +8,10 @@ TEMPLATE_DIR="${SCRIPT_DIR}/templates"
 export MSYS_NO_PATHCONV=1
 # ==============================================================================
 # Script for setting up the build environment in OpenShift
-#
-# * Requires the OpenShift Origin CLI
-# ------------------------------------------------------------------------------
-# Usage on Windows:
-#  ./generateBuilds.sh [project_name] [git_ref] [git_uri]
-#
-# Example:
-#  ./generateBuilds.sh solr master https://github.com/bcgov/openshift-solr.git
-# ------------------------------------------------------------------------------
-# ToDo:
-# * Add support for create or update.
-# -----------------------------------------------------------------------------------
-#DEBUG_MESSAGES=1
-# -----------------------------------------------------------------------------------
+# -------------------------------------------------------------------------------------
 PROJECT_NAME="${1}"
 GIT_REF="${2}"
 GIT_URI="${3}"
-# -----------------------------------------------------------------------------------
-if [ -z "$PROJECT_NAME" ]; then
-	echo "Enter PROJECT_NAME."
-	echo -n "Please enter the name of the tools project; for example 'project-tools': "
-	read PROJECT_NAME
-	PROJECT_NAME="$(echo "${PROJECT_NAME}" | tr '[:upper:]' '[:lower:]')"
-	echo
-fi
-
-if [ -z "$GIT_REF" ]; then
-	echo "Enter GIT_REF"
-	echo -n "Please enter the name of the github reference; for example 'master': "
-	read GIT_REF
-	echo
-fi
-
-if [ -z "$GIT_URI" ]; then
-	echo "Enter GIT_URI"
-	echo -n "Please enter the name of the github reference; for example 'https://github.com/bcgov/TheOrgBook.git': "
-	read GIT_URI
-	echo
-fi
-
-if [ ! -z "$MissingParam" ]; then
-	echo "============================================"
-	echo "One or more parameters are missing!"
-	echo "--------------------------------------------"
-	echo "PROJECT_NAME[{1}]: ${1}"
-	echo "GIT_REF[{2}]: ${2}"
-	echo "GIT_URI[{3}]: ${3}"
-	echo "============================================"
-	echo
-	exit 1
-fi
 # -------------------------------------------------------------------------------------
 BuildConfigPostfix="_BuildConfig.json"
 

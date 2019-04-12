@@ -1,5 +1,5 @@
 # Containerized SOLR On OpenShift
-Apache SOLR makes it easy to add search capability into your apps.  SOLR is a search server (backed by the Lucene serach library).  This repository provides a way for you to take advantage of that in OpenShift.
+Apache SOLR makes it easy to add search capability into your apps.  SOLR is a search server (backed by the Lucene serach library).  This repository provides a way for you to take advantage of that in OpenShift or Minishift.
 
 ## There are 2 distinct parts to this repo:
    
@@ -11,9 +11,6 @@ Which overrides the [official Docker SOLR image][2] to tweak a few things in ord
 
 Which allow you to easily push your project specific configuration files into the SOLR container.
 
-## How to use all of this with your apps
-Sounds cool right?  It is.  And here's how you can use it.
-
 ### Quick Start
 * Bring up a local OpenShift cluster.
   * There are some [Chocolatey Scripts](https://github.com/WadeBarnes/dev-tools/tree/master/chocolatey) that make it very easy to do this on Windows.
@@ -21,21 +18,12 @@ Or
 * Bring up a local Minishift instance.
 * Run the `buildLocalProject.sh -c` script in the `openshift` directory.
 
-This will create a **Solr** project and generate all of the build and deployment configurations needed for a working Solr instance complete with a core configured from source.
+This will create a **Solr** project and generate all of the build and deployment configurations needed for a working Solr instance complete with some cores configured from source.
 Withot option -c, you can generete all of the build and deployment configurations for an existing project.
-
-### If you just want to try running SOLR in OpenShift...
-
-Create the SOLR app from a Docker image
-`> oc new-app dudash/openshift-solr --name=solr-imageonly-demo`
-
-Now you can access it via the route that was automatically exposed on port 8983 and whereever your OpenShift apps route (e.g. openshift-solr-myproject.127.0.0.1.nip.io).  Note: this won't autogenerate a SOLR core.
 
 ### If you want to provide configuration in an automated way...
 * Create a repo
-* Create a folder called `solr/autocore/conf` and add SOLR config files for your desired SOLR configuration
-  (Refer to the sample in the project).
-* Wire up your OpenShift build configuration to point to the repo with configuration.  Refer to the script and template samples in the `openshift` directory.
+* Put all cores config in a folder called `solr`, the cores will be created (or updated) when solr starting on OpenShift
 
 ### The S2I process
 This repo doesn't require [the s2i tool](https://github.com/openshift/source-to-image) to build the image.  However, if you look into the Dockerfile, it does set some s2i LABELS in order for OpenShift to be able to use it as an s2i builder image.
