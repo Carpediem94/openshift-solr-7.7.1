@@ -49,7 +49,8 @@ isLocalCluster (){
 }
 
 isMinishiftRun (){
-	rtnVal=$(minishift status | grep -q "Running")
+	rtnVal=$(minishift status | grep "Running")
+	echo $rtnVal
 	if [ -z "$rtnVal" ]; then
 		# No Minishift instance is running ...		
 	return 1
@@ -80,7 +81,7 @@ while getopts ":c:h" opt; do
   case $opt in
     c)
       CREATE=0
-			shift $(($OPTIND - 1))
+			shift $(($OPTIND - 2))
       ;;
 		h)
       usage
@@ -134,7 +135,7 @@ else
   exit 1
 fi
 
-if $CREATE; then
+if [ ! -z $CREATE ]; then
 	./createLocalProject.sh ${PROJECT_NAMESPACE} "Solr" "Solr Test Project"
 fi
 
